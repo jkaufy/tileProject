@@ -9,7 +9,105 @@ var renderer = PIXI.autoDetectRenderer({ width: 500, height: 500,
 gameport.appendChild(renderer.view);
 
 var stage = new PIXI.Container();
+var startScreen = new PIXI.Container();
+var gameScreen = new PIXI.Container();
+var endScreen = new PIXI.Container();
+var creditScreen = new PIXI.Container();
+var instructionScreen = new PIXI.Container();
 
+
+var game = false;
+var end = false;
+var start = true;
+var instruction = false;
+var credit = false;
+
+// loads back button
+var intructionsBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
+var creditBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
+var endBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
+
+//loads start screen buttons
+var playButton = new PIXI.Sprite(PIXI.Texture.from("playButton.png"));
+var instructionButton = new PIXI.Sprite(PIXI.Texture.from("InstructionButton.png"));
+var creditButton = new PIXI.Sprite(PIXI.Texture.from("CreditButton.png"));
+
+//load screens
+var creditScreenImage = new PIXI.Sprite(PIXI.Texture.from("creditspage.png"));
+var instuctionScreenImage = new PIXI.Sprite(PIXI.Texture.from("Instructionspage.png"));
+
+
+// Start Screen
+
+startScreen.addChild(playButton);
+startScreen.addChild(instructionButton);
+startScreen.addChild(creditButton);
+
+
+playButton.position.x = 185;
+playButton.position.y = 200;
+
+instructionButton.position.x = 125;
+instructionButton.position.y = 275;
+
+creditButton.position.x = 160;
+creditButton.position.y = 350;
+
+playButton.on('mousedown', plButton);
+instructionButton.on('mousedown', insButton);
+creditButton.on('mousedown', credButton);
+
+function insButton(e)
+{
+    instruction = true;
+    start = false; 
+}
+
+function plButton(e)
+{
+    game = true;
+    start = false; 
+}
+
+function credButton(e)
+{
+    credit = true;
+    start = false; 
+}
+// Insturction Screen
+
+instructionScreen.addChild(instuctionScreenImage);
+instructionScreen.addChild(intructionsBackButton);
+
+
+intructionsBackButton.position.x = 185;
+intructionsBackButton.position.y = 400;
+
+intructionsBackButton.on('mousedown', insBackButton);
+
+function insBackButton(e)
+{
+    instruction = false;
+    start = true; 
+}
+
+
+// Credit Screen
+creditScreen.addChild(creditScreenImage);
+creditScreen.addChild(creditBackButton);
+
+creditBackButton.position.x = 185;
+creditBackButton.position.y = 400;
+
+creditBackButton.on('mousedown', credBackButton);
+
+function credBackButton(e)
+{
+    credit = false;
+    start = true; 
+}
+
+// Game Screen
 var goldTotal = 0;
 
 goldText = new PIXI.Text("Gold: " + goldTotal);
@@ -19,7 +117,7 @@ goldText.style.fill = 0xfc9700;
 goldText.style.fontSize = 26;
 goldText.style.fontWeight = 'bold';
 
-stage.addChild(goldText);
+gameScreen.addChild(goldText);
 
 // Function: dropGold()
 // Desc: Drop gold at a TBD location
@@ -81,8 +179,36 @@ function checkForGoldHit(first, second, value) {
 
 // Function: animate()
 function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(stage);
+  requestAnimationFrame(animate);
+  renderer.render(stage);
+
+  if (game)
+  {
+
+  }
+  else if(end)
+  {
+    stage.removeChild(gameScreen);
+    stage.addChild(endScreen);
+  }
+  else if(instruction)
+  {
+    stage.removeChild(startScreen);
+    stage.addChild(instructionScreen);
+  }
+  else if(start)
+  {
+    stage.addChild(startScreen);
+    stage.removeChild(instructionScreen);
+    stage.removeChild(creditScreen);
+    stage.removeChild(endScreen);
+  }
+  else if(credit)
+  {
+    stage.removeChild(startScreen);
+    stage.addChild(creditScreen);
+  }
+
 }
 
 animate();
