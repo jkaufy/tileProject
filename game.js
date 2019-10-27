@@ -88,7 +88,6 @@ instructionScreen.addChild(intructionsBackButton);
 intructionsBackButton.position.x = 185;
 intructionsBackButton.position.y = 400;
 
-
 // Credit Screen
 creditScreen.addChild(creditScreenImage);
 creditScreen.addChild(creditBackButton);
@@ -97,6 +96,17 @@ creditBackButton.position.x = 185;
 creditBackButton.position.y = 400;
 
 // Game Screen
+var player = new PIXI.Sprite(PIXI.Texture.from("img/ball.png"));
+
+player.anchor.x = 0.5;
+player.anchor.y = 0.5;
+player.width = 40;
+player.height = 40;
+player.position.x = 250;
+player.position.y = 250;
+
+gameScreen.addChild(player);
+
 var goldTotal = 0;
 
 goldText = new PIXI.Text("Gold: " + goldTotal);
@@ -107,6 +117,83 @@ goldText.style.fontSize = 26;
 goldText.style.fontWeight = 'bold';
 
 gameScreen.addChild(goldText);
+
+// Character movement constants:
+var MOVE_LEFT = 1;
+var MOVE_RIGHT = 2;
+var MOVE_UP = 3;
+var MOVE_DOWN = 4;
+var NOT_MOVING = 0;
+// Keyboard key constants:
+var W_KEY = 87;
+var S_KEY = 83;
+var A_KEY = 65;
+var D_KEY = 68;
+
+// Function: movePlayer
+// Desc: Moves the player with tweening. The method was adapted from the
+//       TileDungeon example on BBLearn.
+function movePlayer() {
+  if (player.direction == NOT_MOVING) {
+    player.moving = false;
+    return;
+  }
+  player.moving = true;
+  
+  if (player.direction == MOVE_LEFT) 
+  {
+    createjs.Tween.get(player).to({x: player.x - 16}, 120).call(movePlayer);
+  }
+  if (player.direction == MOVE_RIGHT)
+  {
+    createjs.Tween.get(player).to({x: player.x + 16}, 120).call(movePlayer);
+  }
+  if (player.direction == MOVE_UP)
+  {
+    createjs.Tween.get(player).to({y: player.y - 16}, 120).call(movePlayer);
+  }
+  if (player.direction == MOVE_DOWN)
+  {
+    createjs.Tween.get(player).to({y: player.y + 16}, 120).call(movePlayer);
+  }
+}
+
+// Determines which way the player should move on key press,
+// then calls the movePlayer function
+window.addEventListener("keydown", function (event) {
+  event.preventDefault();
+  if (!player) return;
+  if (player.moving) return;
+  if (event.repeat == true) return;
+  
+  player.direction = NOT_MOVING;
+
+  if (event.keyCode == W_KEY)
+  {
+    player.direction = MOVE_UP;
+  }
+  else if (event.keyCode == S_KEY)
+  {
+    player.direction = MOVE_DOWN;
+  }
+  else if (event.keyCode == A_KEY)
+  {
+    player.direction = MOVE_LEFT;
+  }
+  else if (event.keyCode == D_KEY)
+  {
+    player.direction = MOVE_RIGHT;
+  }
+
+  movePlayer();
+});
+
+// When keyboard press has stopped, the player should not move
+window.addEventListener("keyup", function onKeyUp(event) {
+  event.preventDefault();
+  if (!player) return;
+  player.direction = NOT_MOVING;
+});
 
 // Function: dropGold()
 // Desc: Drop gold at a TBD location
