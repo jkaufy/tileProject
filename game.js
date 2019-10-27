@@ -8,6 +8,7 @@ var renderer = PIXI.autoDetectRenderer({ width: 500, height: 500,
 
 gameport.appendChild(renderer.view);
 
+// Create screens
 var stage = new PIXI.Container();
 var startScreen = new PIXI.Container();
 var gameScreen = new PIXI.Container();
@@ -15,34 +16,31 @@ var endScreen = new PIXI.Container();
 var creditScreen = new PIXI.Container();
 var instructionScreen = new PIXI.Container();
 
-
+// Set booleans for identifying the current screen 
 var game = false;
 var end = false;
 var start = true;
 var instruction = false;
 var credit = false;
 
-// loads back button
+// Loads back button
 var intructionsBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
 var creditBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
 var endBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
 
-//loads start screen buttons
+// Loads start screen buttons
 var playButton = new PIXI.Sprite(PIXI.Texture.from("playButton.png"));
 var instructionButton = new PIXI.Sprite(PIXI.Texture.from("InstructionButton.png"));
 var creditButton = new PIXI.Sprite(PIXI.Texture.from("CreditButton.png"));
 
-//load screens
+// Load screens
 var creditScreenImage = new PIXI.Sprite(PIXI.Texture.from("creditspage.png"));
 var instuctionScreenImage = new PIXI.Sprite(PIXI.Texture.from("Instructionspage.png"));
 
-
 // Start Screen
-
 startScreen.addChild(playButton);
 startScreen.addChild(instructionButton);
 startScreen.addChild(creditButton);
-
 
 playButton.position.x = 185;
 playButton.position.y = 200;
@@ -53,43 +51,39 @@ instructionButton.position.y = 275;
 creditButton.position.x = 160;
 creditButton.position.y = 350;
 
-playButton.on('mousedown', plButton);
-instructionButton.on('mousedown', insButton);
-creditButton.on('mousedown', credButton);
-
-function insButton(e)
-{
-    instruction = true;
-    start = false; 
+// Changing screens on button clicks
+playButton.interactive = true;
+playButton.click = function(event) {
+  game = true;
+  start = false; 
+}
+instructionButton.interactive = true;
+instructionButton.click = function(event) {
+  instruction = true;
+  start = false;
+}
+creditButton.interactive = true;
+creditButton.click = function(event) {
+  credit = true;
+  start = false; 
+}
+intructionsBackButton.interactive = true;
+intructionsBackButton.click = function(event) {
+  instruction = false;
+  start = true;
+}
+creditBackButton.interactive = true;
+creditBackButton.click = function(event) {
+  credit = false;
+  start = true; 
 }
 
-function plButton(e)
-{
-    game = true;
-    start = false; 
-}
-
-function credButton(e)
-{
-    credit = true;
-    start = false; 
-}
-// Insturction Screen
-
+// Instruction Screen
 instructionScreen.addChild(instuctionScreenImage);
 instructionScreen.addChild(intructionsBackButton);
 
-
 intructionsBackButton.position.x = 185;
 intructionsBackButton.position.y = 400;
-
-intructionsBackButton.on('mousedown', insBackButton);
-
-function insBackButton(e)
-{
-    instruction = false;
-    start = true; 
-}
 
 
 // Credit Screen
@@ -98,14 +92,6 @@ creditScreen.addChild(creditBackButton);
 
 creditBackButton.position.x = 185;
 creditBackButton.position.y = 400;
-
-creditBackButton.on('mousedown', credBackButton);
-
-function credBackButton(e)
-{
-    credit = false;
-    start = true; 
-}
 
 // Game Screen
 var goldTotal = 0;
@@ -184,31 +170,24 @@ function animate() {
 
   if (game)
   {
-
+    renderer.render(gameScreen);
   }
   else if(end)
   {
-    stage.removeChild(gameScreen);
-    stage.addChild(endScreen);
+    renderer.render(endScreen);
   }
   else if(instruction)
   {
-    stage.removeChild(startScreen);
-    stage.addChild(instructionScreen);
+    renderer.render(instructionScreen);
   }
   else if(start)
   {
-    stage.addChild(startScreen);
-    stage.removeChild(instructionScreen);
-    stage.removeChild(creditScreen);
-    stage.removeChild(endScreen);
+    renderer.render(startScreen);
   }
   else if(credit)
   {
-    stage.removeChild(startScreen);
-    stage.addChild(creditScreen);
+    renderer.render(creditScreen);
   }
-
 }
 
 function update_camera() {
@@ -217,6 +196,5 @@ function update_camera() {
   stage.x = -Math.max(0, Math.min(world.worldWidth*GAME_SCALE - GAME_WIDTH, -stage.x));
   stage.y = -Math.max(0, Math.min(world.worldHeight*GAME_SCALE - GAME_HEIGHT, -stage.y));
 }
-
 
 animate();
