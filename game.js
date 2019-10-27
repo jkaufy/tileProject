@@ -1,9 +1,12 @@
 // Project 3 - Tiles - CS413
 // Authors: Steven Enriquez & Jacob Kaufman
 
+GAME_WIDTH = 500;
+GAME_HEIGHT = 500;
+
 var gameport = document.getElementById("gameport");
 
-var renderer = PIXI.autoDetectRenderer({ width: 500, height: 500, 
+var renderer = PIXI.autoDetectRenderer({ width: GAME_WIDTH, height: GAME_HEIGHT, 
                                          backgroundColor: 0xd6d6d6});
 
 gameport.appendChild(renderer.view);
@@ -24,18 +27,18 @@ var instruction = false;
 var credit = false;
 
 // Loads back button
-var intructionsBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
-var creditBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
-var endBackButton = new PIXI.Sprite(PIXI.Texture.from("BackButton.png"));
+var intructionsBackButton = new PIXI.Sprite(PIXI.Texture.from("img/BackButton.png"));
+var creditBackButton = new PIXI.Sprite(PIXI.Texture.from("img/BackButton.png"));
+var endBackButton = new PIXI.Sprite(PIXI.Texture.from("img/BackButton.png"));
 
 // Loads start screen buttons
-var playButton = new PIXI.Sprite(PIXI.Texture.from("playButton.png"));
-var instructionButton = new PIXI.Sprite(PIXI.Texture.from("InstructionButton.png"));
-var creditButton = new PIXI.Sprite(PIXI.Texture.from("CreditButton.png"));
+var playButton = new PIXI.Sprite(PIXI.Texture.from("img/playButton.png"));
+var instructionButton = new PIXI.Sprite(PIXI.Texture.from("img/InstructionButton.png"));
+var creditButton = new PIXI.Sprite(PIXI.Texture.from("img/CreditButton.png"));
 
 // Load screens
-var creditScreenImage = new PIXI.Sprite(PIXI.Texture.from("creditspage.png"));
-var instuctionScreenImage = new PIXI.Sprite(PIXI.Texture.from("Instructionspage.png"));
+var creditScreenImage = new PIXI.Sprite(PIXI.Texture.from("img/creditspage.png"));
+var instuctionScreenImage = new PIXI.Sprite(PIXI.Texture.from("img/Instructionspage.png"));
 
 // Start Screen
 startScreen.addChild(playButton);
