@@ -21,7 +21,7 @@ var start = true;
 var game = false;
 var endGame = false;
 
-var intructionsBackButton;
+var instructionsBackButton;
 var creditBackButton;
 var endBackButton;
 var playButton;
@@ -41,15 +41,15 @@ PIXI.loader
 
 function setUp()
 {
-  // Load buttons
-  var intructionsBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
+  // Load Buttons
+  var instructionsBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
   var creditBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
   var endBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
   var playButton = new PIXI.Sprite(PIXI.loader.resources["img/playButton.png"].texture);
   var instructionButton = new PIXI.Sprite(PIXI.loader.resources["img/InstructionButton.png"].texture);
   var creditButton = new PIXI.Sprite(PIXI.loader.resources["img/CreditButton.png"].texture);
 
-  // Load screens
+  // Load Screens
   var creditScreenImage = new PIXI.Sprite(PIXI.loader.resources["img/creditspage.png"].texture);
   var instuctionScreenImage = new PIXI.Sprite(PIXI.loader.resources["img/Instructionspage.png"].texture);
 
@@ -77,13 +77,13 @@ function setUp()
 
   // Instruction Screen
   insturctionStage.addChild(instuctionScreenImage);
-  insturctionStage.addChild(intructionsBackButton);
+  insturctionStage.addChild(instructionsBackButton);
 
-  intructionsBackButton.interactive = true;
-  intructionsBackButton.on('mousedown', intructionsBackButtonPush);
+  instructionsBackButton.interactive = true;
+  instructionsBackButton.on('mousedown', instructionsBackButtonPush);
 
-  intructionsBackButton.position.x = 185;
-  intructionsBackButton.position.y = 400;
+  instructionsBackButton.position.x = 185;
+  instructionsBackButton.position.y = 400;
 
   // Credit Screen
   creditStage.addChild(creditScreenImage);
@@ -95,7 +95,6 @@ function setUp()
   creditBackButton.position.x = 185;
   creditBackButton.position.y = 400;
 }
-
 
 // Changing screens on button clicks
 function instructionButtonPush(e)
@@ -114,7 +113,7 @@ function creditButtonPush(e) {
   start = false; 
 }
 
-function intructionsBackButtonPush(e) {
+function instructionsBackButtonPush(e) {
   instruction = false;
   start = true;
 }
@@ -138,7 +137,6 @@ var W_KEY = 87;
 var S_KEY = 83;
 var A_KEY = 65;
 var D_KEY = 68;
-var MOVE_NONE = 0;
 
 // Moving the player with the keyboard keys W,A,S,D
 var map = {};
@@ -212,8 +210,6 @@ function ready() {
 
   water = world.getObject("Water").data;
 
-  player.direction = MOVE_NONE;
-  player.moving = false;
   animate();
 }
 
