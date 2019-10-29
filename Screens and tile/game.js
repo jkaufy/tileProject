@@ -3,8 +3,6 @@ var GAME_HEIGHT = 500;
 var GAME_SCALE = 4;
 var DIM = 16;
 
-
-
 var gameport = document.getElementById("gameport");
 var renderer = new PIXI.autoDetectRenderer(GAME_WIDTH,
                                            GAME_HEIGHT,
@@ -103,8 +101,8 @@ function setUp()
 // Changing screens on button clicks
 function instructionButtonPush(e)
 {
-    instructions = true;
-    start = false; 
+  instructions = true;
+  start = false; 
 }
 
 function playButtonPush(e) {
@@ -117,7 +115,6 @@ function creditButtonPush(e) {
   start = false; 
 }
 
-
 function intructionsBackButtonPush(e) {
   instruction = false;
   start = true;
@@ -128,90 +125,70 @@ function creditBackButtonPush(e) {
   start = true; 
 }
 
-
-// game screen
+// Game Screen
 gameStage.scale.x = GAME_SCALE;
 gameStage.scale.y = GAME_SCALE;
 
 // Scene objects get loaded in the ready function
-var hero;
+var player;
 var world;
 var water;
 
-// Character movement constants:
-var MOVE_LEFT = 1;
-var MOVE_RIGHT = 2;
-var MOVE_UP = 3;
-var MOVE_DOWN = 4;
+// Keyboard Key Constants
+var W_KEY = 87;
+var S_KEY = 83;
+var A_KEY = 65;
+var D_KEY = 68;
 var MOVE_NONE = 0;
 
-// The move function starts or continues movement
-function move() {
-
-  if (hero.direction == MOVE_NONE) {
-    return;
-  }
-
-
-  var dx = 0;
-  var dy = 0;
-
-  if (hero.direction == MOVE_LEFT) dx -= 1;
-  if (hero.direction == MOVE_RIGHT) dx += 1;
-  if (hero.direction == MOVE_UP) dy -= 1;  
-  if (hero.direction == MOVE_DOWN) dy += 1;
-
-  hero.gx += dx;
-  hero.gy += dy;
-  
-  createjs.Tween.get(hero).to({x: hero.gx*DIM, y: hero.gy*DIM}, 250).call(move);
-
+// Moving the player with the keyboard keys W,A,S,D
+var map = {};
+onkeydown = onkeyup = function(e){
+    map[e.keyCode] = e.type == 'keydown';
+    // move up & right (diagonal)
+    if (map[W_KEY] && map[D_KEY]) {
+      player.position.y -= 3; 
+      player.position.x += 3;
+    }
+    // move up & left (diagnol)
+    else if (map[W_KEY] && map[A_KEY]) {
+      player.position.y -= 3; 
+      player.position.x -= 3;
+    }
+    // move down & left (diagnol)
+    else if (map[S_KEY] && map[A_KEY]) {
+      player.position.y += 3; 
+      player.position.x -= 3;
+    }
+    // move down & right (diagnol)
+    else if (map[S_KEY] && map[D_KEY]) {
+      player.position.y += 3; 
+      player.position.x += 3;
+    }
+    // move up
+    else if (map[W_KEY]) {
+      player.position.y -= 3; 
+    }
+    // move down
+    else if (map[S_KEY]) {
+      player.position.y += 3; 
+    }
+    // move left
+    else if (map[A_KEY]) {
+      player.position.x -= 3;
+    }
+    // move right
+    else if (map[D_KEY]) {
+      player.position.x += 3;
+    }
 }
-
-/*window.addEventListener("mousedown", function (e) {
-  e.preventDefault();
-  if (instructionButton)
-  {
-    instructions = true;
-    start = false; 
-  }
-
-});*/
-
-
-// Keydown events start movement
-window.addEventListener("keydown", function (e) {
-  e.preventDefault();
-  if (!hero) return;
-  if (e.repeat == true) return;
-  
-  hero.direction = MOVE_NONE;
-
-  if (e.keyCode == 87)
-    hero.direction = MOVE_UP;
-  else if (e.keyCode == 83)
-    hero.direction = MOVE_DOWN;
-  else if (e.keyCode == 65)
-    hero.direction = MOVE_LEFT;
-  else if (e.keyCode == 68)
-    hero.direction = MOVE_RIGHT;
-
-  move();
-});
-
-// Keyup events end movement
-window.addEventListener("keyup", function onKeyUp(e) {
-  e.preventDefault();
-  if (!hero) return;
-  hero.direction = MOVE_NONE;
-});
 
 PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 
 PIXI.loader
   .add('map.json')
   .add('tileset.png')
-  .add('hero.png')
+  .add('player.png')
   .load(ready);
 
 function ready() {
@@ -220,22 +197,24 @@ function ready() {
   world = tu.makeTiledWorld("map.json", "tileset.png");
   gameStage.addChild(world);
 
-  hero = new PIXI.Sprite(PIXI.loader.resources["hero.png"].texture);
-  hero.gx = 9;
-  hero.gy = 5;
-  hero.x = hero.gx*DIM;
-  hero.y = hero.gy*DIM;
-  hero.anchor.x = 0.0;
-  hero.anchor.y = 1.0;
+  player = new PIXI.Sprite(PIXI.loader.resources["player.png"].texture);
+  player.gx = 9;
+  player.gy = 5;
+  player.width = 15;
+  player.height = 15;
+  player.x = player.gx*DIM;
+  player.y = player.gy*DIM;
+  player.anchor.x = 0.0;
+  player.anchor.y = 1.0;
 
   // Find the entity layer
   var entities = world.getObject("Entities");
-  entities.addChild(hero);
+  entities.addChild(player);
 
   water = world.getObject("Water").data;
 
-  hero.direction = MOVE_NONE;
-  hero.moving = false;
+  player.direction = MOVE_NONE;
+  player.moving = false;
   animate();
 }
 
@@ -266,8 +245,8 @@ function animate(timestamp) {
 }
 
 function update_camera() {
-  gameStage.x = -hero.x*GAME_SCALE + GAME_WIDTH/2 - hero.width/2*GAME_SCALE;
-  gameStage.y = -hero.y*GAME_SCALE + GAME_HEIGHT/2 + hero.height/2*GAME_SCALE;
+  gameStage.x = -player.x*GAME_SCALE + GAME_WIDTH/2 - player.width/2*GAME_SCALE;
+  gameStage.y = -player.y*GAME_SCALE + GAME_HEIGHT/2 + player.height/2*GAME_SCALE;
   gameStage.x = -Math.max(0, Math.min(world.worldWidth*GAME_SCALE - GAME_WIDTH, -gameStage.x));
   gameStage.y = -Math.max(0, Math.min(world.worldHeight*GAME_SCALE - GAME_HEIGHT, -gameStage.y));
 }
