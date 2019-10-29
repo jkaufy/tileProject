@@ -1,3 +1,1 @@
-# CS413 - Tiles
-### Authors: 
-Jacob Kaufman & Steven Enriquez
+# Project2-413
