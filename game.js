@@ -1,5 +1,5 @@
-// Project 2 - 413
-// Author: Steven Enriquez
+// Project 3 - 413
+// Authors: Steven Enriquez & Jacob Kaufman
 
 var gameport = document.getElementById("gameport");
 
@@ -42,6 +42,10 @@ loop: true
 
 var pickupSound = PIXI.sound.Sound.from({
 url: 'sound/pickup.wav',
+});
+
+var deathSound = PIXI.sound.Sound.from({
+  url: 'sound/death.wav',
 });
 
 stage.addChild(backgroundImage);
@@ -195,22 +199,6 @@ onkeydown = onkeyup = function(e){
     }
 }
 
-// // Function: findMouseCoords()
-// // Desc: calculates the coordinates of the current mouse position
-// //       in the available range (behind the walls)
-// function findMouseCoords() {
-//   mouseCoords = renderer.plugins.interaction.mouse.global;
-
-//   // if mouse is behind the walls, move player to mouse coords
-//   if (mouseCoords.x > 30 && mouseCoords.y > 30 && 
-//       mouseCoords.x < 470 && mouseCoords.y < 470) {
-//         player.position.x = mouseCoords.x;
-//         player.position.y = mouseCoords.y;
-//       }
-// }
-
-// document.getElementById("gameport").onmousemove = findMouseCoords;
-
 // Function: collisionDetection(first, second)
 // Desc: Detects when two sprites collide.
 //       I got the idea for this function from:
@@ -266,6 +254,7 @@ function checkForCoinHit(first, second) {
 function checkForEnemyHit(first, second) {
   if(collisionDetection(first, second)) {
     stageID = END_SCREEN;
+    deathSound.play();
     endGame();
   }
 }
@@ -384,7 +373,6 @@ function setupCredits() {
   stageID = CREDITS_SCREEN;
 }
 
-
 function ready() {
   var frames = [];
   var index;
@@ -433,12 +421,6 @@ function setupGame() {
 	stageID = GAME_SCREEN;
 }
 
-// window.setInterval(function() {
-//     newCoinX = Math.floor(Math.random() * 440) + 25;
-//     newCoinY = Math.floor(Math.random() * 440) + 25;
-//     createjs.Tween.get(coin.position).to({x: newCoinX, y: newCoinY}, 300, createjs.Ease.bounceOut)
-// }, 2000);
-
 // Function: animate()
 function animate() {
     requestAnimationFrame(animate);
@@ -451,8 +433,8 @@ function animate() {
       update_camera();
 
     	checkForCoinHit(player, coin);
-        checkForEnemyHit(player, enemy);
-        moveEnemy();
+      checkForEnemyHit(player, enemy);
+      moveEnemy();
     }
     else if(stageID == END_SCREEN) {
     	renderer.render(endGameStage);
