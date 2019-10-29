@@ -41,11 +41,10 @@ PIXI.loader
 
 function setUp()
 {
+  // Load buttons
   var intructionsBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
   var creditBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
   var endBackButton = new PIXI.Sprite(PIXI.loader.resources["img/BackButton.png"].texture);
-
-  // Loads start screen buttons
   var playButton = new PIXI.Sprite(PIXI.loader.resources["img/playButton.png"].texture);
   var instructionButton = new PIXI.Sprite(PIXI.loader.resources["img/InstructionButton.png"].texture);
   var creditButton = new PIXI.Sprite(PIXI.loader.resources["img/CreditButton.png"].texture);
